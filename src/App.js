@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { BaseColaboradores } from "./helpers/baseColaboradores";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './app.css'
+import Forms from "./components/Forms";
+import "./components/forms.css"
 
-function App() {
+const App = () => {
+  const [inputNombre, setInputNombre] = useState('');
+  const [inputCorreo, setInputCorreo] = useState('');
+  const [busqueda, setBusqueda] = useState('');
+  const [colaboradores, setColaboradores] = useState(BaseColaboradores);
+
+  const addColaborador = (nombre, correo) => {
+    setColaboradores([...colaboradores, { nombre: nombre, correo:
+        correo, id: colaboradores.length+1 }]);
+};
+  const onNameChange = (e) => {
+      setInputNombre(e.target.value);
+};
+  const onCorreoChange = (e) => {
+    setInputCorreo(e.target.value);
+};
+  const onSubmit = (e) => {
+    if (inputNombre === "" || inputCorreo === ""){
+      alert("Faltan datos por ingresar");
+    }else {
+      e.preventDefault();
+      addColaborador(inputNombre, inputCorreo);
+      setInputNombre("");
+      setInputCorreo("");
+    };
+  };
+  const filtroColaboradores = colaboradores.filter(colaborador => colaborador.nombre.toLowerCase().includes(busqueda.toLocaleLowerCase()));
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Forms 
+      onSubmit={onSubmit} 
+      valueName={inputNombre} 
+      valueEmail={inputCorreo} 
+      filtroColaboradores={filtroColaboradores}
+      onNameChange={onNameChange}
+      onCorreoChange={onCorreoChange}
+      busqueda={busqueda} setBusqueda={setBusqueda}
+      />
     </div>
-  );
-}
+    
+  )
+};
 
-export default App;
+export default App
